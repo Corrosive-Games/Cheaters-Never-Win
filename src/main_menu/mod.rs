@@ -1,7 +1,7 @@
 use bevy::{app::AppExit, prelude::*};
-use bevy_kira_audio::{Audio, AudioChannel};
 
 use crate::{
+    audio::{GameAudioOptions, GameAudioState},
     pause_menu::button::{UIButton, HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON},
     states::GameStates,
 };
@@ -20,8 +20,7 @@ impl Plugin for MainMenuPlugin {
         app.add_system_set(
             SystemSet::on_enter(GameStates::MainMenu)
                 .with_system(ui::build_ui)
-                .with_system(spawn_main_menu_background)
-                .with_system(start_automation_audio),
+                .with_system(spawn_main_menu_background),
         );
         // on update
         app.add_system_set(SystemSet::on_update(GameStates::MainMenu).with_system(button_handler));
@@ -29,8 +28,7 @@ impl Plugin for MainMenuPlugin {
         app.add_system_set(
             SystemSet::on_exit(GameStates::MainMenu)
                 .with_system(destroy_menu)
-                .with_system(start_gameplay_audio)
-                .with_system(despawn_main_menu_background)
+                .with_system(despawn_main_menu_background),
         );
     }
 }
@@ -47,15 +45,17 @@ pub fn button_handler(
     mut interaction_query: Query<(&Interaction, &mut UiColor, &UIButton), Changed<Interaction>>,
     mut game_state: ResMut<State<GameStates>>,
     mut exit: EventWriter<AppExit>,
-    asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
+    mut game_audio_state: ResMut<GameAudioState>,
 ) {
     for (interaction, mut color, button) in interaction_query.iter_mut() {
         match *interaction {
             Interaction::Clicked => {
-                let audio_channel = AudioChannel::new("sfx-channel".to_owned());
-                audio.set_volume_in_channel(5.0, &audio_channel);
-                audio.play_in_channel(asset_server.load("button.ogg"), &audio_channel);
+                game_audio_state.queue_sound(
+                    "button-sound".to_owned(),
+                    GameAudioOptions {
+                        ..Default::default()
+                    },
+                );
                 *color = PRESSED_BUTTON.into();
                 match button.name.as_str() {
                     "play" => {
@@ -77,28 +77,13 @@ pub fn button_handler(
     }
 }
 
-fn start_automation_audio(asset_server: Res<AssetServer>, audio: Res<Audio>) {
-    audio.stop();
-    audio.play_looped(asset_server.load("automation.ogg"));
-}
-
-fn start_gameplay_audio(asset_server: Res<AssetServer>, audio: Res<Audio>) {
-    audio.stop();
-    audio.play_looped(asset_server.load("cyberpunk_moonlight_sonata.ogg"));
-}
-
 fn spawn_main_menu_background(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let texture_handle = asset_server.load("cyberpunk-street.png");
-    let texture_atlas = TextureAtlas::from_grid(
-        texture_handle,
-        Vec2::new(608., 192.),
-        1,
-        1,
-    );
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(608., 192.), 1, 1);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     commands
@@ -110,7 +95,8 @@ fn spawn_main_menu_background(
                 ..Default::default()
             },
             ..Default::default()
-        }).insert(MainBackgroundLayer);
+        })
+        .insert(MainBackgroundLayer);
 }
 
 fn despawn_main_menu_background(

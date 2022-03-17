@@ -10,6 +10,7 @@ use rand::Rng;
 use std::collections::HashMap;
 
 use super::CollectedChars;
+use crate::audio::{GameAudioOptions, GameAudioState};
 use crate::cheat_codes::{CheatCodeKind, CheatCodeResource};
 use crate::interactables::{CharTextComponent, InteractableComponent, InteractableType};
 use crate::toast::ShowToast;
@@ -288,8 +289,7 @@ pub fn animate_sprite(
     mut player_animation_resource: ResMut<PlayerAnimationResource>,
     mut player_query: Query<(&mut Player, &RigidBodyVelocityComponent)>,
     mut query: Query<(&mut PlayerAnimationTimer, &mut TextureAtlasSprite)>,
-    asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
+    mut game_audio_state: ResMut<GameAudioState>,
     rapier_config: Res<RapierConfiguration>,
 ) {
     for (mut player, rb_vel) in player_query.iter_mut() {
@@ -310,9 +310,12 @@ pub fn animate_sprite(
                                 + player_animation_resource.dash_attack.offset)
                     {
                         sprite.index = player_animation_resource.dash_attack.offset;
-                        let audio_channel = AudioChannel::new("ability-channel".to_owned());
-                        audio.set_volume_in_channel(5.0, &audio_channel);
-                        audio.play_in_channel(asset_server.load("dash.ogg"), &audio_channel);
+                        game_audio_state.queue_sound(
+                            "dash-sound".to_owned(),
+                            GameAudioOptions {
+                                ..Default::default()
+                            },
+                        );
                     } else if sprite.index
                         < (player_animation_resource.dash_attack.length
                             + player_animation_resource.dash_attack.offset)
@@ -328,9 +331,12 @@ pub fn animate_sprite(
                                 + player_animation_resource.jump.offset)
                     {
                         sprite.index = player_animation_resource.jump.offset;
-                        let audio_channel = AudioChannel::new("movement-channel".to_owned());
-                        audio.set_volume_in_channel(10.0, &audio_channel);
-                        audio.play_in_channel(asset_server.load("jump.ogg"), &audio_channel);
+                        game_audio_state.queue_sound(
+                            "jump-sound".to_owned(),
+                            GameAudioOptions {
+                                ..Default::default()
+                            },
+                        );
                     } else if sprite.index
                         < (player_animation_resource.jump.length
                             + player_animation_resource.jump.offset)
@@ -349,23 +355,17 @@ pub fn animate_sprite(
                                 (sprite.index + 1) % player_animation_resource.run_right.length;
                             player_animation_resource.run_step_counter += 1;
                         }
-                        let audio_channel = AudioChannel::new("movement-channel".to_owned());
                         if player_animation_resource.run_step_counter % 3 == 0 {
-                            audio.set_volume_in_channel(
-                                15.0 * (rb_vel.linvel.x.abs()
-                                    / (player.speed * rapier_config.scale)),
-                                &audio_channel,
-                            );
-                            audio.play_in_channel(
-                                asset_server.load(
-                                    format!(
-                                        "footsteps/{}.ogg",
-                                        rand::thread_rng().gen_range(0..10)
-                                    )
-                                    .as_str(),
-                                ),
-                                &audio_channel,
-                            );
+                            game_audio_state.queue_sound(
+                                "footsteps-sound".to_owned(),
+                                GameAudioOptions {
+                                    volume: Some(
+                                        15.0 * (rb_vel.linvel.x.abs()
+                                            / (player.speed * rapier_config.scale)),
+                                    ),
+                                    handle_idx: Some(rand::thread_rng().gen_range(0..10)),
+                                },
+                            )
                         }
                     } else if rb_vel.linvel.x < 0.0 {
                         //player is running left
@@ -382,23 +382,17 @@ pub fn animate_sprite(
                                 + player_animation_resource.run_left.offset;
                             player_animation_resource.run_step_counter += 1;
                         }
-                        let audio_channel = AudioChannel::new("movement-channel".to_owned());
                         if player_animation_resource.run_step_counter % 3 == 0 {
-                            audio.set_volume_in_channel(
-                                15.0 * (rb_vel.linvel.x.abs()
-                                    / (player.speed * rapier_config.scale)),
-                                &audio_channel,
-                            );
-                            audio.play_in_channel(
-                                asset_server.load(
-                                    format!(
-                                        "footsteps/{}.ogg",
-                                        rand::thread_rng().gen_range(0..10)
-                                    )
-                                    .as_str(),
-                                ),
-                                &audio_channel,
-                            );
+                            game_audio_state.queue_sound(
+                                "footsteps-sound".to_owned(),
+                                GameAudioOptions {
+                                    volume: Some(
+                                        15.0 * (rb_vel.linvel.x.abs()
+                                            / (player.speed * rapier_config.scale)),
+                                    ),
+                                    handle_idx: Some(rand::thread_rng().gen_range(0..10)),
+                                },
+                            )
                         }
                     } else {
                         //player is idling
@@ -431,8 +425,7 @@ fn move_character(
     mut animation_query: Query<&mut TextureAtlasSprite, With<PlayerAnimationTimer>>,
     player_animation_resource: Res<PlayerAnimationResource>,
     cheat_codes: ResMut<CheatCodeResource>,
-    asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
+    mut game_audio_state: ResMut<GameAudioState>,
     time: Res<Time>,
 ) {
     for (mut player, mut rb_vel, rb_mprops) in query.iter_mut() {
@@ -524,9 +517,12 @@ fn move_character(
                 for mut sprite in animation_query.iter_mut() {
                     sprite.index = player_animation_resource.jump.offset;
                 }
-                let audio_channel = AudioChannel::new("movement-channel".to_owned());
-                audio.set_volume_in_channel(10.0, &audio_channel);
-                audio.play_in_channel(asset_server.load("jump.ogg"), &audio_channel);
+                game_audio_state.queue_sound(
+                    "jump-sound".to_owned(),
+                    GameAudioOptions {
+                        ..Default::default()
+                    },
+                );
                 player.jump_count = 0;
             }
         }
@@ -547,6 +543,7 @@ fn follow_player_camera(
 fn detect_char_interactable(
     mut commands: Commands,
     mut collected_chars: ResMut<CollectedChars>,
+    mut game_audio_state: ResMut<GameAudioState>,
     player_query: Query<&Transform, With<Player>>,
     interactable_query: Query<(
         Entity,
@@ -554,7 +551,6 @@ fn detect_char_interactable(
         &Transform,
         &CharTextComponent,
     )>,
-    asset_server: Res<AssetServer>,
     audio: Res<Audio>,
 ) {
     if let Some(player_transform) = player_query.iter().next() {
@@ -572,7 +568,12 @@ fn detect_char_interactable(
                     {
                         let audio_channel = AudioChannel::new("sfx-channel".to_owned());
                         audio.set_volume_in_channel(0.3, &audio_channel);
-                        audio.play_in_channel(asset_server.load("pickup.ogg"), &audio_channel);
+                        game_audio_state.queue_sound(
+                            "pickup-sound".to_owned(),
+                            GameAudioOptions {
+                                ..Default::default()
+                            },
+                        );
                         collected_chars.values.push(char_component.value);
 
                         let char_entry = collected_chars.values_map.get(&char_component.value);
@@ -617,8 +618,8 @@ pub fn player_collide_enemy(
     mut game_over_event: EventWriter<GameOverEvent>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
     mut game_state: ResMut<State<GameStates>>,
+    mut game_audio_state: ResMut<GameAudioState>,
 ) {
     for contact_event in contact_events.iter() {
         if let ContactEvent::Started(h1, h2) = contact_event {
@@ -638,9 +639,12 @@ pub fn player_collide_enemy(
                             &asset_server,
                             &mut texture_atlases,
                         );
-                        let audio_channel = AudioChannel::new("explosion-channel".to_owned());
-                        audio.set_volume_in_channel(0.6, &audio_channel);
-                        audio.play_in_channel(asset_server.load("explosion.ogg"), &audio_channel);
+                        game_audio_state.queue_sound(
+                            "explosion-sound".to_owned(),
+                            GameAudioOptions {
+                                ..Default::default()
+                            },
+                        );
                         if player.lives <= 0 {
                             game_over_event.send(GameOverEvent);
                             game_state.push(GameStates::GameOver).unwrap();

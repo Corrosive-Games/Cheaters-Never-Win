@@ -9,6 +9,7 @@ use bevy_rapier2d::prelude::*;
 use cheat_codes::CheatCodeResource;
 use toast::ShowToast;
 
+mod audio;
 mod camera;
 mod cheat_codes;
 mod console;
@@ -59,6 +60,7 @@ fn main() {
     .add_state(states::GameStates::MainMenu)
     .add_plugin(stats::GameStatsPlugin)
     .add_plugin(effects::EffectsPlugin)
+    .add_plugin(audio::GameAudioPlugin)
     .add_startup_system(camera::add_camera)
     // TODO: remove
     .add_startup_system(test_codes)

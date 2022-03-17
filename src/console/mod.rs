@@ -1,11 +1,11 @@
 use bevy::prelude::*;
-use bevy_kira_audio::{Audio, AudioChannel};
 use bevy_loading::prelude::*;
 
 use self::{
     event::{PrintToConsoleEvent, SendCommandEvent},
     loading_screen::LoadingScreenPlugin,
 };
+use crate::audio::{GameAudioOptions, GameAudioState};
 use crate::runner::Player;
 use crate::states::GameStates;
 use crate::{
@@ -135,8 +135,7 @@ fn open_console_handler(
     mut game_state: ResMut<State<GameStates>>,
     player_query: Query<&Transform, With<Player>>,
     interactable_query: Query<(&InteractableComponent, &Transform)>,
-    asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
+    mut game_audio_state: ResMut<GameAudioState>,
 ) {
     if keyboard.just_released(KeyCode::E) {
         // Only open the terminal when in range
@@ -155,9 +154,12 @@ fn open_console_handler(
                         {
                             game_state.push(GameStates::ConsoleLoading).unwrap();
                             keyboard.reset(KeyCode::E);
-                            let audio_channel = AudioChannel::new("sfx-channel".to_owned());
-                            audio.set_volume_in_channel(10.0, &audio_channel);
-                            audio.play_in_channel(asset_server.load("crt.ogg"), &audio_channel);
+                            game_audio_state.queue_sound(
+                                "crt-sound".to_owned(),
+                                GameAudioOptions {
+                                    ..Default::default()
+                                },
+                            );
                         }
                     }
                     _ => {}
