@@ -81,7 +81,7 @@ fn init_audio(mut commands: Commands, asset_server: ResMut<AssetServer>) {
         GameAudio {
             channel: AudioChannel::new("pickup-sound".to_owned()),
             handles: vec![asset_server.load("pickup.ogg")],
-            volume: 0.5,
+            volume: 0.1,
             current_handle: 0,
         },
     );
@@ -90,7 +90,7 @@ fn init_audio(mut commands: Commands, asset_server: ResMut<AssetServer>) {
         GameAudio {
             channel: AudioChannel::new("powerup-sound".to_owned()),
             handles: vec![asset_server.load("powerup.ogg")],
-            volume: 0.5,
+            volume: 0.1,
             current_handle: 0,
         },
     );
@@ -99,7 +99,7 @@ fn init_audio(mut commands: Commands, asset_server: ResMut<AssetServer>) {
         GameAudio {
             channel: AudioChannel::new("crt-sound".to_owned()),
             handles: vec![asset_server.load("crt.ogg")],
-            volume: 0.5,
+            volume: 0.55,
             current_handle: 0,
         },
     );
@@ -108,7 +108,7 @@ fn init_audio(mut commands: Commands, asset_server: ResMut<AssetServer>) {
         GameAudio {
             channel: AudioChannel::new("explosion-sound".to_owned()),
             handles: vec![asset_server.load("explosion.ogg")],
-            volume: 0.5,
+            volume: 0.1,
             current_handle: 0,
         },
     );
