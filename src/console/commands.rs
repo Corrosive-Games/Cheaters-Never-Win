@@ -1,7 +1,7 @@
+use crate::audio::{GameAudioOptions, GameAudioState};
 use crate::cheat_codes::CheatCodeActivationResult;
 use crate::runner::CollectedChars;
 use crate::{cheat_codes::CheatCodeResource, states::GameStates};
-use bevy_kira_audio::{Audio, AudioChannel};
 
 use super::{event::*, CheatCodeActivatedEvent, ConsoleData};
 use bevy::prelude::*;
@@ -14,8 +14,7 @@ pub fn command_handler(
     mut cheat_codes_res: ResMut<CheatCodeResource>,
     mut collected_chars: ResMut<CollectedChars>,
     mut ev_writer: EventWriter<CheatCodeActivatedEvent>,
-    audio: Res<Audio>,
-    asset_server: Res<AssetServer>,
+    mut game_audio_state: ResMut<GameAudioState>,
 ) {
     for SendCommandEvent(command) in cmd_reader.iter() {
         // skip if the command is empty
@@ -54,9 +53,12 @@ pub fn command_handler(
 
                     if let CheatCodeActivationResult::Activated(kind) = activation_res {
                         ev_writer.send(CheatCodeActivatedEvent(kind));
-                        let audio_channel = AudioChannel::new("sfx-channel".to_owned());
-                        audio.set_volume_in_channel(2.0, &audio_channel);
-                        audio.play_in_channel(asset_server.load("powerup.ogg"), &audio_channel);
+                        game_audio_state.queue_sound(
+                            "powerup-sound".to_owned(),
+                            GameAudioOptions {
+                                ..Default::default()
+                            },
+                        );
                     }
                 } else {
                     print_to_console.send(PrintToConsoleEvent(format!(

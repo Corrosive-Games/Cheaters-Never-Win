@@ -1,7 +1,7 @@
 use bevy::{app::AppExit, prelude::*};
-use bevy_kira_audio::{Audio, AudioChannel};
 use bevy_ninepatch::NinePatchPlugin;
 
+use crate::audio::{GameAudioOptions, GameAudioState};
 use crate::states::GameStates;
 
 use self::button::{UIButton, HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON};
@@ -63,15 +63,17 @@ pub fn button_handler(
     mut interaction_query: Query<(&Interaction, &mut UiColor, &UIButton), Changed<Interaction>>,
     mut game_state: ResMut<State<GameStates>>,
     mut exit: EventWriter<AppExit>,
-    asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
+    mut game_audio_state: ResMut<GameAudioState>,
 ) {
     for (interaction, mut color, button) in interaction_query.iter_mut() {
         match *interaction {
             Interaction::Clicked => {
-                let audio_channel = AudioChannel::new("sfx-channel".to_owned());
-                audio.set_volume_in_channel(5.0, &audio_channel);
-                audio.play_in_channel(asset_server.load("button.ogg"), &audio_channel);
+                game_audio_state.queue_sound(
+                    "button-sound".to_owned(),
+                    GameAudioOptions {
+                        ..Default::default()
+                    },
+                );
                 *color = PRESSED_BUTTON.into();
                 match button.name.as_str() {
                     "resume" => {
