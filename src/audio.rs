@@ -15,7 +15,7 @@ pub struct GameAudioState {
 
 #[derive(Default, Debug, PartialEq)]
 pub struct GameAudioOptions {
-    pub volume: Option<f32>,
+    pub volume_multiplier: Option<f32>,
     pub handle_idx: Option<usize>,
 }
 
@@ -99,7 +99,7 @@ fn init_audio(mut commands: Commands, asset_server: ResMut<AssetServer>) {
         GameAudio {
             channel: AudioChannel::new("crt-sound".to_owned()),
             handles: vec![asset_server.load("crt.ogg")],
-            volume: 0.55,
+            volume: 0.8,
             current_handle: 0,
         },
     );
@@ -126,7 +126,7 @@ fn init_audio(mut commands: Commands, asset_server: ResMut<AssetServer>) {
         GameAudio {
             channel: AudioChannel::new("dash-sound".to_owned()),
             handles: vec![asset_server.load("button.ogg")],
-            volume: 0.5,
+            volume: 1.0,
             current_handle: 0,
         },
     );
@@ -146,7 +146,7 @@ fn init_audio(mut commands: Commands, asset_server: ResMut<AssetServer>) {
                 asset_server.load("footsteps/8.ogg"),
                 asset_server.load("footsteps/9.ogg"),
             ],
-            volume: 0.5,
+            volume: 1.5,
             current_handle: 0,
         },
     );
@@ -200,18 +200,18 @@ fn play_single_sounds(
 
         if let Some(game_audio) = game_audio_channels.0.get(&channel_name.to_owned()) {
             let mut handle_idx = 0;
-            let mut volume = game_audio.volume;
+            let mut volume_multiplier = 1.0;
 
             if let Some(idx) = options.handle_idx {
                 handle_idx = idx;
             }
 
-            if let Some(vol) = options.volume {
-                volume = vol;
+            if let Some(vol) = options.volume_multiplier {
+                volume_multiplier = vol;
             }
 
             let handle = &game_audio.handles[handle_idx];
-            audio.set_volume_in_channel(volume, &game_audio.channel);
+            audio.set_volume_in_channel(game_audio.volume * volume_multiplier, &game_audio.channel);
             audio.play_in_channel(handle.clone(), &game_audio.channel);
         }
     }

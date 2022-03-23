@@ -359,9 +359,9 @@ pub fn animate_sprite(
                             game_audio_state.queue_sound(
                                 "footsteps-sound".to_owned(),
                                 GameAudioOptions {
-                                    volume: Some(
-                                        15.0 * (rb_vel.linvel.x.abs()
-                                            / (player.speed * rapier_config.scale)),
+                                    volume_multiplier: Some(
+                                        rb_vel.linvel.x.abs()
+                                            / (player.speed * rapier_config.scale),
                                     ),
                                     handle_idx: Some(rand::thread_rng().gen_range(0..10)),
                                 },
@@ -386,9 +386,9 @@ pub fn animate_sprite(
                             game_audio_state.queue_sound(
                                 "footsteps-sound".to_owned(),
                                 GameAudioOptions {
-                                    volume: Some(
-                                        15.0 * (rb_vel.linvel.x.abs()
-                                            / (player.speed * rapier_config.scale)),
+                                    volume_multiplier: Some(
+                                        rb_vel.linvel.x.abs()
+                                            / (player.speed * rapier_config.scale),
                                     ),
                                     handle_idx: Some(rand::thread_rng().gen_range(0..10)),
                                 },
