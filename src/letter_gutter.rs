@@ -1,7 +1,5 @@
 use bevy::prelude::*;
-use std::time::Duration;
 
-use crate::toast::ShowToast;
 use crate::{runner::CollectedChars, states::GameStates};
 
 #[derive(Component)]
@@ -99,8 +97,6 @@ fn update_gutter(
     collected_chars: Res<CollectedChars>,
     mut query: Query<&mut Text, With<GutterComponent>>,
     asset_server: Res<AssetServer>,
-    mut toast_writer: EventWriter<ShowToast>,
-    keyboard_input: Res<Input<KeyCode>>,
 ) {
     let font_handle = asset_server.load("fonts/212 Keyboard.otf");
 
