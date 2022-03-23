@@ -3,7 +3,7 @@ use std::time::Duration;
 use crate::enemies::Enemy;
 use crate::{effects, physics, platforms, states::GameStates};
 use bevy::math::Vec3Swizzles;
-use bevy::{prelude::*, render::camera::Camera};
+use bevy::{prelude::*};
 use bevy_kira_audio::{Audio, AudioChannel};
 use bevy_parallax::*;
 use bevy_rapier2d::prelude::*;
