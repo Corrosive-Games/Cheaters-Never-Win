@@ -3,7 +3,7 @@ use std::time::Duration;
 use crate::enemies::Enemy;
 use crate::{effects, physics, platforms, states::GameStates};
 use bevy::math::Vec3Swizzles;
-use bevy::{prelude::*};
+use bevy::prelude::*;
 use bevy_kira_audio::{Audio, AudioChannel};
 use bevy_parallax::*;
 use bevy_rapier2d::prelude::*;
@@ -487,10 +487,10 @@ fn move_character(
         let dash = keyboard_input.just_released(KeyCode::D);
 
         let jump = cheat_codes.is_code_activated(&CheatCodeKind::Jump)
-            && keyboard_input.just_released(KeyCode::Space)
+            && keyboard_input.just_pressed(KeyCode::Space)
             && !player.feet_touching_platforms.platforms.is_empty()
             || (cheat_codes.is_code_activated(&CheatCodeKind::DoubleJump)
-                && keyboard_input.just_released(KeyCode::Space));
+                && keyboard_input.just_pressed(KeyCode::Space));
 
         let left = cheat_codes.is_code_activated(&CheatCodeKind::MoveLeft)
             && keyboard_input.pressed(KeyCode::A);
