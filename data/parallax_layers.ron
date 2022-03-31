@@ -1,0 +1,32 @@
+[
+	(
+		speed: 0.98,
+		path: "cyberpunk_back.png",
+		tile_size: (96.0, 160.0),
+		cols: 1,
+		rows: 1,
+		scale: 4.5,
+		z: 0.0,
+		transition_factor: 1.2,
+	),
+    (
+		speed: 0.92,
+		path: "cyberpunk_middle.png",
+		tile_size: (144.0, 160.0),
+		cols: 1,
+		rows: 1,
+		scale: 4.5,
+		z: 1.0,
+		transition_factor: 1.2,
+	),
+    (
+		speed: 0.82,
+		path: "cyberpunk_front.png",
+		tile_size: (272.0, 160.0),
+		cols: 1,
+		rows: 1,
+		scale: 4.5,
+		z: 2.0,
+		transition_factor: 1.2,
+	),
+]

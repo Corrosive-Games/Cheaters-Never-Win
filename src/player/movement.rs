@@ -10,7 +10,6 @@ use crate::{
     effects, enemies, game_states,
     game_states::GameStates,
     physics,
-    player::player,
     player::spawn,
 };
 
