@@ -99,10 +99,11 @@ pub fn spawn_chunk(
                 }
                 CheatCodeRarity::Rare => {
                     randomize_text(&code.text, vec![2, 5, 3, 1, 0, 4], ch_data.is_random)
-                }
-                CheatCodeRarity::Legendary => {
-                    randomize_text(&code.text, vec![4, 2, 6, 3, 1, 7, 0, 5], ch_data.is_random)
-                }
+                } /*
+                  CheatCodeRarity::Legendary => {
+                      randomize_text(&code.text, vec![4, 2, 6, 3, 1, 7, 0, 5], ch_data.is_random)
+                  }
+                  */
             };
 
             for n in 0..ch_data.positions.len() {
