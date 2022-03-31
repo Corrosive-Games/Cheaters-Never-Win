@@ -11,14 +11,14 @@ mod console;
 mod effects;
 mod enemies;
 mod game_over;
+mod game_states;
 mod interactables;
 mod letter_gutter;
 mod main_menu;
 mod pause_menu;
 mod physics;
 mod platforms;
-mod runner;
-mod states;
+mod player;
 mod stats;
 mod tab_menu;
 mod toast;
@@ -42,7 +42,7 @@ fn main() {
     .add_plugins(DefaultPlugins)
     .add_plugin(tab_menu::TabMenuPlugin)
     .add_plugin(console::ConsolePlugin)
-    .add_plugin(runner::RunnerPlugin)
+    .add_plugin(player::RunnerPlugin)
     .add_plugin(pause_menu::PauseMenuPlugin)
     .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
     .add_plugin(physics::PhysicsPlugin)
@@ -53,13 +53,13 @@ fn main() {
     .add_plugin(interactables::InteractablesPlugin)
     .add_plugin(letter_gutter::LetterGutterPlugin)
     .add_plugin(AudioPlugin)
-    .add_state(states::GameStates::MainMenu)
+    .add_state(game_states::GameStates::MainMenu)
     .add_plugin(stats::GameStatsPlugin)
     .add_plugin(effects::EffectsPlugin)
     .add_plugin(audio::GameAudioPlugin)
     .add_startup_system(camera::add_camera)
     .add_system_set(
-        SystemSet::on_enter(states::GameStates::Main).with_system(tutorial::prelude_text),
+        SystemSet::on_enter(game_states::GameStates::Main).with_system(tutorial::prelude_text),
     )
     .run();
 }

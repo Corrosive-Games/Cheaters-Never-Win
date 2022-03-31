@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{runner::CollectedChars, states::GameStates};
+use crate::{game_states::GameStates, player::CollectedChars};
 
 #[derive(Component)]
 pub struct GutterComponent;

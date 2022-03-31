@@ -6,8 +6,8 @@ use self::{
     loading_screen::LoadingScreenPlugin,
 };
 use crate::audio::{GameAudioOptions, GameAudioState};
-use crate::runner::Player;
-use crate::states::GameStates;
+use crate::game_states::GameStates;
+use crate::player::Player;
 use crate::{
     cheat_codes::CheatCodeKind,
     interactables::{InteractableComponent, InteractableType},

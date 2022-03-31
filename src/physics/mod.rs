@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::states::GameStates;
+use crate::game_states::GameStates;
 
 pub struct PhysicsPlugin;
 

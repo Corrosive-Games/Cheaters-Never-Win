@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_kira_audio::{Audio, AudioChannel, AudioSource};
 use std::collections::HashMap;
 
-use crate::states::GameStates;
+use crate::game_states::GameStates;
 
 pub struct GameAudioPlugin;
 

@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use super::ConsoleAssets;
 
 use crate::cheat_codes::CheatCodeResource;
-use crate::runner::{CollectedChars, LETTERS};
+use crate::player::{CollectedChars, LETTERS};
 
 // Components
 #[derive(Component)]

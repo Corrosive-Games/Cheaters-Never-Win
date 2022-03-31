@@ -1,4 +1,4 @@
-use crate::{physics::jump, states::GameStates};
+use crate::{game_states::GameStates, physics::jump};
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use serde::Deserialize;

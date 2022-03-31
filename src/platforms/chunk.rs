@@ -7,7 +7,7 @@ use serde::Deserialize;
 use super::platform;
 use crate::cheat_codes::{randomize_text, CheatCodeKind, CheatCodeRarity, CheatCodeResource};
 use crate::interactables::{spawn_char, spawn_terminal, InteractableComponent};
-use crate::{enemies, runner};
+use crate::{enemies, player};
 
 #[derive(Deserialize)]
 pub struct PlatformData {
@@ -192,7 +192,7 @@ pub fn generate_chunks(
     rapier_config: Res<RapierConfiguration>,
     asset_server: Res<AssetServer>,
     mut chunks_resource: ResMut<ChunksResource>,
-    player_query: Query<(&runner::Player, &RigidBodyPositionComponent)>,
+    player_query: Query<(&player::Player, &RigidBodyPositionComponent)>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     cheat_codes: ResMut<CheatCodeResource>,
 ) {
@@ -238,7 +238,7 @@ pub fn generate_chunks(
 pub fn despawn_platforms(
     mut commands: Commands,
     rapier_config: Res<RapierConfiguration>,
-    player_query: Query<&RigidBodyPositionComponent, With<runner::Player>>,
+    player_query: Query<&RigidBodyPositionComponent, With<player::Player>>,
     platform_query: Query<(Entity, &RigidBodyPositionComponent), With<platform::Platform>>,
 ) {
     for player_rb_pos in player_query.iter() {
@@ -257,7 +257,7 @@ pub fn despawn_platforms(
 pub fn despawn_enemies(
     mut commands: Commands,
     rapier_config: Res<RapierConfiguration>,
-    player_query: Query<&RigidBodyPositionComponent, With<runner::Player>>,
+    player_query: Query<&RigidBodyPositionComponent, With<player::Player>>,
     enemy_query: Query<(Entity, &RigidBodyPositionComponent), With<enemies::Enemy>>,
 ) {
     for player_rb_pos in player_query.iter() {
@@ -276,7 +276,7 @@ pub fn despawn_enemies(
 pub fn despawn_interactables(
     mut commands: Commands,
     rapier_config: Res<RapierConfiguration>,
-    player_query: Query<&RigidBodyPositionComponent, With<runner::Player>>,
+    player_query: Query<&RigidBodyPositionComponent, With<player::Player>>,
     interactable_query: Query<(Entity, &Transform), With<InteractableComponent>>,
 ) {
     for player_rb_pos in player_query.iter() {

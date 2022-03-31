@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::cheat_codes::CheatCodeResource;
-use crate::runner::{CollectedChars, LETTERS};
+use crate::player::{CollectedChars, LETTERS};
 
 use super::{TabMenuAssets, TabMenuContent};
 

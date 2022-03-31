@@ -1,8 +1,8 @@
 use bevy::{app::AppExit, prelude::*};
 
 use crate::{
+    game_states::GameStates,
     pause_menu::button::{UIButton, HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON},
-    states::GameStates,
 };
 
 use self::ui::GameOverScreenComponent;

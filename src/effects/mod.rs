@@ -1,4 +1,4 @@
-use crate::states::GameStates;
+use crate::game_states::GameStates;
 use bevy::prelude::*;
 pub struct EffectsPlugin;
 

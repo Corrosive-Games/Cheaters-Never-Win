@@ -1,12 +1,16 @@
 use bevy::prelude::*;
+mod feet;
+mod interact;
 mod lives_counter;
+mod movement;
 mod player;
+mod spawn;
 
 use std::collections::HashMap;
 
-use crate::states::GameStates;
+use crate::game_states::GameStates;
 
-pub use self::player::Player;
+pub use self::spawn::Player;
 
 pub struct RunnerPlugin;
 
