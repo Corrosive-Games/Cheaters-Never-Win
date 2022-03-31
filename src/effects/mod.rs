@@ -1,4 +1,4 @@
-use crate::states::GameStates;
+use crate::game_states::GameStates;
 use bevy::prelude::*;
 pub struct EffectsPlugin;
 
@@ -21,7 +21,6 @@ pub struct EffectAnimationTimer(Timer);
 pub fn spawn_explosion(
     position: Vec2,
     commands: &mut Commands,
-    //rapier_config: &RapierConfiguration,
     asset_server: &AssetServer,
     texture_atlases: &mut Assets<TextureAtlas>,
 ) {
@@ -34,11 +33,7 @@ pub fn spawn_explosion(
             texture_atlas: texture_atlas_handle,
             transform: Transform {
                 scale: Vec3::new(1.5, 1.5, 1.0),
-                translation: Vec3::new(
-                    //position.x * rapier_config.scale,
-                    //position.y * rapier_config.scale,
-                    position.x, position.y, 60.0,
-                ),
+                translation: Vec3::new(position.x, position.y, 60.0),
                 ..Default::default()
             },
             ..Default::default()

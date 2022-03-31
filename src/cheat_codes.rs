@@ -38,7 +38,7 @@ pub enum CheatCodeRarity {
     Mandatory = 0, // weight of zero because it is not present in the distribution
     Common = 10,
     Rare = 5,
-    Legendary = 2,
+    //Legendary = 2,
 }
 
 #[derive(Debug)]
@@ -99,6 +99,7 @@ pub struct CheatCodeResource {
 }
 
 impl CheatCodeResource {
+    #[allow(dead_code)]
     pub fn get_next_code(&self) -> CheatCodeKind {
         // first get a list of mandatory cheat codes (JUMP)
         let mandatories = self
@@ -371,7 +372,7 @@ pub fn generate_random_code(rarity: CheatCodeRarity) -> String {
         CheatCodeRarity::Mandatory => 4,
         CheatCodeRarity::Common => 4,
         CheatCodeRarity::Rare => 6,
-        CheatCodeRarity::Legendary => 8,
+        //CheatCodeRarity::Legendary => 8,
     };
 
     Alphanumeric

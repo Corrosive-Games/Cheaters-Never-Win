@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::RigidBodyVelocityComponent;
 
-use crate::{cheat_codes::CheatCodeResource, runner::Player, states::GameStates};
+use crate::{cheat_codes::CheatCodeResource, game_states::GameStates, player::Player};
 
 pub struct GameStatsPlugin;
 

@@ -1,7 +1,7 @@
 use crate::audio::{GameAudioOptions, GameAudioState};
 use crate::cheat_codes::CheatCodeActivationResult;
-use crate::runner::CollectedChars;
-use crate::{cheat_codes::CheatCodeResource, states::GameStates};
+use crate::player::CollectedChars;
+use crate::{cheat_codes::CheatCodeResource, game_states::GameStates};
 
 use super::{event::*, CheatCodeActivatedEvent, ConsoleData};
 use bevy::prelude::*;

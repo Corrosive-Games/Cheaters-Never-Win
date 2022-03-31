@@ -8,8 +8,8 @@ mod second_page;
 
 use crate::{
     cheat_codes::{CheatCodeKind, CheatCodeResource},
-    runner::CollectedChars,
-    states::GameStates,
+    game_states::GameStates,
+    player::CollectedChars,
     stats::GameStatsResource,
     toast::ShowToast,
 };

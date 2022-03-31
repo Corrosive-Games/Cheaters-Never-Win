@@ -2,7 +2,7 @@ use bevy::{app::AppExit, prelude::*};
 use bevy_ninepatch::NinePatchPlugin;
 
 use crate::audio::{GameAudioOptions, GameAudioState};
-use crate::states::GameStates;
+use crate::game_states::GameStates;
 
 use self::button::{UIButton, HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON};
 
