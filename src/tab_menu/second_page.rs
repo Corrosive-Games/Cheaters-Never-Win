@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 //use crate::cheat_codes::CheatCodeResource;
-use crate::player::{CollectedChars, LETTERS};
+//use crate::player::{CollectedChars, LETTERS};
 
 use super::{TabMenuAssets, TabMenuContent};
 
@@ -13,7 +13,7 @@ pub fn build_ui(
     assets: ResMut<TabMenuAssets>,
     query: Query<Entity, With<TabMenuContent>>,
     //cheat_codes_res: Res<CheatCodeResource>,
-    collected_chars_res: Res<CollectedChars>,
+    //collected_chars_res: Res<CollectedChars>,
     window: Res<Windows>,
 ) {
     let current_window = window.get_primary().unwrap();
@@ -108,6 +108,7 @@ pub fn build_ui(
     */
 
     // TODO: refactor creating page for collected letters
+    /*
     let mut collected_chars_section: Vec<TextSection> = Vec::new();
     for i in 0..LETTERS.len() {
         let c = LETTERS[i];
@@ -125,8 +126,10 @@ pub fn build_ui(
             collected_chars_section.push(section);
         }
     }
+    */
 
     // Divide into chunks
+    /*
     let mut section_1: Vec<TextSection> = Vec::new();
     let mut section_2: Vec<TextSection> = Vec::new();
 
@@ -178,6 +181,7 @@ pub fn build_ui(
         ..Default::default()
     };
 
+    */
     // ---------- UI TREE CONSTRUCTION ----------//
 
     content
@@ -188,8 +192,8 @@ pub fn build_ui(
                     //parent.spawn_bundle(found_codes);
                 });
                 parent.spawn_bundle(right_page).with_children(|parent| {
-                    parent.spawn_bundle(collected_letters_1);
-                    parent.spawn_bundle(collected_letters_2);
+                    //parent.spawn_bundle(collected_letters_1);
+                    //parent.spawn_bundle(collected_letters_2);
                 });
             });
         })

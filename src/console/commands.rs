@@ -1,10 +1,11 @@
 use crate::audio::{GameAudioOptions, GameAudioState};
-//use crate::cheat_codes::CheatCodeActivationResult;
-use crate::player::CollectedChars;
-//use crate::{cheat_codes::CheatCodeResource, game_states::GameStates};
-use crate::game_states::GameStates;
+use crate::{
+    cheat_codes::{CheatCodeActivationResult, CheatCodesResource},
+    game_states::GameStates,
+    player::Player,
+};
 
-//use super::CheatCodeActivatedEvent;
+use super::CheatCodeActivatedEvent;
 use super::{event::*, ConsoleData};
 use bevy::prelude::*;
 
@@ -13,9 +14,9 @@ pub fn command_handler(
     mut print_to_console: EventWriter<PrintToConsoleEvent>,
     mut data: ResMut<ConsoleData>,
     mut game_state: ResMut<State<GameStates>>,
-    //mut cheat_codes_res: ResMut<CheatCodeResource>,
-    mut collected_chars: ResMut<CollectedChars>,
-    //mut ev_writer: EventWriter<CheatCodeActivatedEvent>,
+    mut cheat_codes_res: ResMut<CheatCodesResource>,
+    mut player_query: Query<&mut Player>,
+    mut ev_writer: EventWriter<CheatCodeActivatedEvent>,
     mut game_audio_state: ResMut<GameAudioState>,
 ) {
     for SendCommandEvent(command) in cmd_reader.iter() {
@@ -39,21 +40,23 @@ pub fn command_handler(
             "clear" => data.lines.clear(),
             "help" => print_to_console.send(PrintToConsoleEvent(super::utils::display_help())),
             "cheat" => {
-                print_to_console.send(PrintToConsoleEvent(format!(
-                    "Activating cheat code: <{}>...",
-                    args[1]
-                )));
+                if let Some(arg) = args.get(1) {
+                    print_to_console.send(PrintToConsoleEvent(format!(
+                        "Activating cheat code: <{}>...",
+                        arg
+                    )));
 
-                //let can_activate = is_valid_cheat(&mut collected_chars, args[1], &cheat_codes_res);
+                    // assumes there is only one player in the game
+                    let mut player = player_query.iter_mut().next().unwrap();
 
-                /*
-                if can_activate {
-                    let activation_res = cheat_codes_res.activate_code(args[1]);
+                    // check if entered code can be activated
+                    let activation_res = cheat_codes_res.activate_code(arg, &mut player.inventory);
                     print_to_console.send(PrintToConsoleEvent(format!(
                         "Activation result: {}",
                         activation_res.repr()
                     )));
 
+                    // if the code can be activated play sound and send event
                     if let CheatCodeActivationResult::Activated(kind) = activation_res {
                         ev_writer.send(CheatCodeActivatedEvent(kind));
                         game_audio_state.queue_sound(
@@ -64,11 +67,12 @@ pub fn command_handler(
                         );
                     }
                 } else {
-                    print_to_console.send(PrintToConsoleEvent(format!(
-                        "Failed to activate. Need more information."
-                    )));
+                    print_to_console.send(PrintToConsoleEvent("Hey..idiot...".to_string()));
                 }
-                */
+
+                // TODO: remove
+                let mut player = player_query.iter_mut().next().unwrap();
+                println!("{:?}", player.inventory);
             }
             "exit" => {
                 print_to_console.send(PrintToConsoleEvent("Closing session...".to_string()));
@@ -84,44 +88,3 @@ pub fn command_handler(
         }
     }
 }
-
-/*
-pub fn is_valid_cheat(
-    collected_chars: &mut CollectedChars,
-    code_text: &str,
-    cheat_codes: &CheatCodeResource,
-) -> bool {
-    let original_collected_chars = collected_chars.values.clone();
-    let original_collected_chars_map = collected_chars.values_map.clone();
-
-    let cheats = cheat_codes.codes.clone();
-    let code = cheats
-        .into_iter()
-        .find(|(_kind, code)| code.text == code_text);
-
-    if let Some((_, cheat)) = code {
-        for ch in cheat.text.chars() {
-            let index_opt = collected_chars.values.iter().position(|val| *val == ch);
-
-            if let Some(index) = index_opt {
-                collected_chars.values.remove(index);
-
-                // Update values map
-                let char_entry = collected_chars.values_map.get(&ch);
-                if let Some(_count) = char_entry {
-                    *collected_chars.values_map.get_mut(&ch).unwrap() -= 1;
-                }
-            } else {
-                collected_chars.values = original_collected_chars;
-                collected_chars.values_map = original_collected_chars_map;
-                return false;
-            }
-        }
-        return true;
-    }
-
-    collected_chars.values = original_collected_chars;
-    collected_chars.values_map = original_collected_chars_map;
-    false
-}
-*/

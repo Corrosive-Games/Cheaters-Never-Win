@@ -6,10 +6,8 @@ use rand::Rng;
 
 use crate::{
     audio::{GameAudioOptions, GameAudioState},
-    //cheat_codes::{self, CheatCodeKind},
-    effects,
-    enemies,
-    game_states,
+    cheat_codes::{CheatCodeKind, CheatCodesResource},
+    effects, enemies, game_states,
     game_states::GameStates,
     physics,
     player::spawn,
@@ -26,7 +24,7 @@ pub fn move_player_system(
     )>,
     mut animation_query: Query<&mut TextureAtlasSprite, With<spawn::PlayerAnimationTimer>>,
     player_animation_resource: Res<PlayerAnimationResource>,
-    //cheat_codes: ResMut<cheat_codes::CheatCodeResource>,
+    cheat_codes: ResMut<CheatCodesResource>,
     mut game_audio_state: ResMut<GameAudioState>,
     time: Res<Time>,
 ) {
@@ -52,19 +50,18 @@ pub fn move_player_system(
         let _down = keyboard_input.pressed(KeyCode::S);
         let right = keyboard_input.pressed(KeyCode::D);
         let dash = keyboard_input.just_released(KeyCode::D);
-        // TODO: check if cheat code activated
-        let left = keyboard_input.pressed(KeyCode::A);
-
-        /*
-        let jump = cheat_codes.is_code_activated(&CheatCodeKind::Jump)
-            && keyboard_input.just_pressed(KeyCode::Space)
-            && !player.feet_touching_platforms.is_empty()
-            || (cheat_codes.is_code_activated(&CheatCodeKind::DoubleJump)
-                && keyboard_input.just_pressed(KeyCode::Space));
-
-        let left = cheat_codes.is_code_activated(&CheatCodeKind::MoveLeft)
+        let left = cheat_codes.is_code_active(&CheatCodeKind::MoveLeft)
             && keyboard_input.pressed(KeyCode::A);
 
+        let jump = cheat_codes.is_code_active(&CheatCodeKind::Jump)
+            && keyboard_input.just_pressed(KeyCode::Space)
+            && !player.feet_touching_platforms.is_empty();
+        /*
+        || (cheat_codes.is_code_activated(&CheatCodeKind::DoubleJump)
+            && keyboard_input.just_pressed(KeyCode::Space));
+            */
+
+        /*
 
         if dash && cheat_codes.is_code_activated(&CheatCodeKind::Dash) {
             if player.dash_input_count == 0 {
@@ -107,6 +104,10 @@ pub fn move_player_system(
         } else {
             rb_vel.linvel.y = 0.0;
             rb_vel.linvel.x += player.acceleration * 2.0;
+        }
+
+        if jump {
+            physics::jump(1500.0, &mut rb_vel, rb_mprops);
         }
 
         /*

@@ -6,6 +6,7 @@ use self::{
     loading_screen::LoadingScreenPlugin,
 };
 use crate::audio::{GameAudioOptions, GameAudioState};
+use crate::cheat_codes::CheatCodeKind;
 use crate::game_states::GameStates;
 use crate::interactables::{InteractableComponent, InteractableType};
 use crate::player::Player;
@@ -17,7 +18,7 @@ mod loading_screen;
 mod ui;
 mod utils;
 
-//pub struct CheatCodeActivatedEvent(pub CheatCodeKind);
+pub struct CheatCodeActivatedEvent(pub CheatCodeKind);
 
 #[derive(Component)]
 pub struct ConsoleStateEntity;
@@ -42,7 +43,7 @@ impl Plugin for ConsolePlugin {
         );
 
         // plugin building
-        //app.add_event::<CheatCodeActivatedEvent>();
+        app.add_event::<CheatCodeActivatedEvent>();
         app.insert_resource(ConsoleData {
             input: String::from(""),
             history_index: 0,
@@ -57,7 +58,7 @@ impl Plugin for ConsolePlugin {
         .add_system_set(
             SystemSet::on_update(GameStates::Console)
                 .with_system(close_console_handler)
-                //.with_system(event::show_help_text)
+                .with_system(event::show_help_text)
                 .with_system(ui::hide_foreground),
         )
         .add_system_set(

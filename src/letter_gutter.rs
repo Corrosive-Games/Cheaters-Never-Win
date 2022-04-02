@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{game_states::GameStates, player::CollectedChars};
+use crate::game_states::GameStates;
 
 #[derive(Component)]
 pub struct GutterComponent;
@@ -13,7 +13,7 @@ pub struct LetterGutterPlugin;
 impl Plugin for LetterGutterPlugin {
     fn build(&self, app: &mut App) {
         app.add_system_set(SystemSet::on_enter(GameStates::Main).with_system(build_ui));
-        app.add_system_set(SystemSet::on_update(GameStates::Main).with_system(update_gutter));
+        //app.add_system_set(SystemSet::on_update(GameStates::Main).with_system(update_gutter));
         app.add_system_set(SystemSet::on_exit(GameStates::Main).with_system(gutter_destructor));
     }
 }
@@ -93,14 +93,16 @@ pub fn build_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
         .insert(GutterUIComponent);
 }
 
+/*
 fn update_gutter(
-    collected_chars: Res<CollectedChars>,
+    //collected_chars: Res<CollectedChars>,
     mut query: Query<&mut Text, With<GutterComponent>>,
     asset_server: Res<AssetServer>,
 ) {
     let font_handle = asset_server.load("fonts/212 Keyboard.otf");
 
     for mut gutter_text in query.iter_mut() {
+
         let sections: Vec<TextSection> = collected_chars
             .values
             .iter()
@@ -121,3 +123,4 @@ fn update_gutter(
         }
     }
 }
+*/

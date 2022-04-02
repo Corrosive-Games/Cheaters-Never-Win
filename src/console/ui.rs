@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use super::ConsoleAssets;
 
 //use crate::cheat_codes::CheatCodeResource;
-use crate::player::{CollectedChars, LETTERS};
+//use crate::player::{CollectedChars, LETTERS};
 
 // Components
 #[derive(Component)]
@@ -38,7 +38,7 @@ pub fn build_ui(
     console_assets: Res<ConsoleAssets>,
     window: Res<Windows>,
     //cheat_codes_res: Res<CheatCodeResource>,
-    collected_chars_res: Res<CollectedChars>,
+    //collected_chars_res: Res<CollectedChars>,
     assets: Res<AssetServer>,
 ) {
     info!("[ConsolePlugin] Building console UI");
@@ -200,6 +200,7 @@ pub fn build_ui(
         ..Default::default()
     };
 
+    /*
     let mut collected_chars_section: Vec<TextSection> = Vec::new();
     for i in 0..LETTERS.len() {
         let c = LETTERS[i];
@@ -217,8 +218,10 @@ pub fn build_ui(
             collected_chars_section.push(section);
         }
     }
+    */
 
     // Divide into chunks
+    /*
     let mut section_1: Vec<TextSection> = Vec::new();
     let mut section_2: Vec<TextSection> = Vec::new();
 
@@ -265,6 +268,7 @@ pub fn build_ui(
         },
         ..Default::default()
     };
+    */
 
     // ---------- UI TREE CONSTRUCTION ----------//
     commands
@@ -303,8 +307,8 @@ pub fn build_ui(
             parent
                 .spawn_bundle(collected_letters_content_container)
                 .with_children(|parent| {
-                    parent.spawn_bundle(collected_letters_1);
-                    parent.spawn_bundle(collected_letters_2);
+                    //parent.spawn_bundle(collected_letters_1);
+                    //parent.spawn_bundle(collected_letters_2);
                 });
         })
         .insert(super::ConsoleStateEntity);

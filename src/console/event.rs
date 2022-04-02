@@ -2,11 +2,11 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
-//use crate::cheat_codes::CheatCodeResource;
+use crate::cheat_codes::CheatCodesResource;
 use crate::toast::ShowToast;
 
+use super::CheatCodeActivatedEvent;
 use super::ConsoleData;
-//use super::CheatCodeActivatedEvent;
 
 pub struct PrintToConsoleEvent(pub String);
 pub struct SendCommandEvent(pub String);
@@ -20,11 +20,10 @@ pub fn add_message_events_to_console(
     }
 }
 
-/*
 pub fn show_help_text(
     mut ev_reader: EventReader<CheatCodeActivatedEvent>,
     mut ev_writer: EventWriter<ShowToast>,
-    cheat_code_res: Res<CheatCodeResource>,
+    cheat_code_res: Res<CheatCodesResource>,
 ) {
     for CheatCodeActivatedEvent(kind) in ev_reader.iter() {
         let code = cheat_code_res.codes.get(kind).unwrap();
@@ -34,4 +33,3 @@ pub fn show_help_text(
         })
     }
 }
-*/

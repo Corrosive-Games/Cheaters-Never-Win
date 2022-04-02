@@ -2,7 +2,8 @@ use crate::{
     audio::{GameAudioOptions, GameAudioState},
     //cheat_codes::{CheatCodeKind, CheatCodeResource},
     interactables::{CharTextComponent, InteractableComponent, InteractableType},
-    player::{spawn, CollectedChars},
+    //player::{spawn, CollectedChars},
+    player::spawn,
     toast::ShowToast,
 };
 use bevy::prelude::*;
@@ -50,7 +51,7 @@ pub fn show_terminal_toaster_notification(
 // Pick up keycaps when player runs into them
 pub fn detect_char_interactable(
     mut commands: Commands,
-    mut collected_chars: ResMut<CollectedChars>,
+    //mut collected_chars: ResMut<CollectedChars>,
     mut game_audio_state: ResMut<GameAudioState>,
     player_query: Query<&Transform, With<spawn::Player>>,
     interactable_query: Query<(
@@ -82,6 +83,7 @@ pub fn detect_char_interactable(
                                 ..Default::default()
                             },
                         );
+                        /*
                         collected_chars.values.push(char_component.value);
 
                         let char_entry = collected_chars.values_map.get(&char_component.value);
@@ -91,7 +93,7 @@ pub fn detect_char_interactable(
                                 .get_mut(&char_component.value)
                                 .unwrap() += 1;
                         }
-
+                        */
                         commands.entity(entity).despawn();
                     }
                 }

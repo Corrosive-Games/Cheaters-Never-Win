@@ -9,7 +9,7 @@ mod second_page;
 use crate::{
     //cheat_codes::{CheatCodeKind, CheatCodeResource},
     game_states::GameStates,
-    player::CollectedChars,
+    //player::CollectedChars,
     stats::GameStatsResource,
     toast::ShowToast,
 };
@@ -67,7 +67,7 @@ fn switch_page(
     query: Query<Entity, With<TabMenuContent>>,
     window: Res<Windows>,
     //cheat_codes_res: Res<CheatCodeResource>,
-    collected_chars_res: Res<CollectedChars>,
+    //collected_chars_res: Res<CollectedChars>,
     stats_res: Res<GameStatsResource>,
 ) {
     if keyboard.just_pressed(KeyCode::Tab) {
@@ -75,11 +75,9 @@ fn switch_page(
         if assets.current_page == "first".to_string() {
             assets.current_page = "second".to_string();
             second_page::build_ui(
-                commands,
-                assets,
-                query,
+                commands, assets, query,
                 //cheat_codes_res,
-                collected_chars_res,
+                //collected_chars_res,
                 window,
             );
         } else {

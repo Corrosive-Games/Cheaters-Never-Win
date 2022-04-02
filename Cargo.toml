@@ -24,8 +24,6 @@ bevy_tweening = "0.3.2"
 bevy_kira_audio = { version = "0.8.0", features = ["ogg"]}
 bevy-parallax = "0.1.0"
 
-[features]
-default = ["bevy/dynamic"] # to make the wasm github action work with the --no-default-feature flag
 
 # Enabling bevylint
 [workspace.metadata.dylint]

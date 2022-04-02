@@ -1,3 +1,4 @@
+use crate::player::Inventory;
 use rand::seq::IteratorRandom;
 use std::collections::HashMap;
 
@@ -58,7 +59,7 @@ pub enum CheatCodeActivationResult {
     NotFound,
     Activated(CheatCodeKind),
     AlreadyActivated(CheatCodeKind),
-    InadequateKeycaps(CheatCodeKind),
+    InadequateInventory(CheatCodeKind),
 }
 impl CheatCodeActivationResult {
     pub fn repr(&self) -> String {
@@ -69,9 +70,9 @@ impl CheatCodeActivationResult {
             CheatCodeActivationResult::AlreadyActivated(kind) => {
                 return format!("[{:?}] is already active", kind)
             }
-            CheatCodeActivationResult::NotFound => "invalid code given".to_string(),
-            CheatCodeActivationResult::InadequateKeycaps(kind) => {
-                return format!("Inadequate keycaps  for [{:?}]", kind)
+            CheatCodeActivationResult::NotFound => "Invalid code given".to_string(),
+            CheatCodeActivationResult::InadequateInventory(kind) => {
+                return format!("Inadequate inventory for [{:?}]", kind)
             }
         }
     }
@@ -82,31 +83,97 @@ pub struct CheatCodesResource {
 }
 
 impl CheatCodesResource {
+    pub fn is_code_active(&self, kind: &CheatCodeKind) -> bool {
+        self.codes.get(kind).unwrap().is_active
+    }
+
     // attempt to activate code with given input text string
-    pub fn activate_code(&mut self, text: &str) -> CheatCodeActivationResult {
+    pub fn activate_code(
+        &mut self,
+        text: &str,
+        inventory: &mut Inventory,
+    ) -> CheatCodeActivationResult {
         // iteration over all the existing codes
         for (_, code) in self.codes.iter_mut() {
             // check if text entered matches cheat code for CheatCodeKind
             if code.text.eq(&text.to_lowercase()) {
-                // check if once code is already activated
-                match code.activation {
-                    CheatCodeActivation::Multiple => {
-                        // activate the code
-                        code.is_active = true;
-                        return CheatCodeActivationResult::Activated(code.kind.clone());
-                    }
-                    CheatCodeActivation::Once => {
-                        if code.is_active {
-                            return CheatCodeActivationResult::AlreadyActivated(code.kind.clone());
-                        } else {
+                // TODO: check if player has inventory for code
+                if Self::check_inventory(code.text.clone(), inventory) {
+                    // check if once code is already activated
+                    match code.activation {
+                        CheatCodeActivation::Multiple => {
+                            // activate the code
                             code.is_active = true;
                             return CheatCodeActivationResult::Activated(code.kind.clone());
                         }
+                        CheatCodeActivation::Once => {
+                            if code.is_active {
+                                return CheatCodeActivationResult::AlreadyActivated(
+                                    code.kind.clone(),
+                                );
+                            } else {
+                                code.is_active = true;
+                                return CheatCodeActivationResult::Activated(code.kind.clone());
+                            }
+                        }
                     }
+                } else {
+                    return CheatCodeActivationResult::InadequateInventory(code.kind.clone());
                 }
             }
         }
         CheatCodeActivationResult::NotFound
+    }
+
+    fn check_inventory(code_text: String, inventory: &mut Inventory) -> bool {
+        // first check words
+        let code_words: Vec<&str> = code_text.split('-').collect();
+
+        let mut found_words: Vec<&str> = Vec::new();
+        for word in code_words.clone() {
+            if let Some(&word_inventory) = inventory.words.get(word) {
+                // if a number is found for it
+                if word_inventory != 0 {
+                    found_words.push(word);
+                }
+            }
+        }
+
+        // find remaining words after checking the player's word inventory
+        let remaining_words: Vec<&str> = code_words
+            .clone()
+            .into_iter()
+            .filter(|item| !found_words.contains(item))
+            .collect();
+        println!("remaining words: {:?}", remaining_words);
+        // then check keycaps
+        let mut found_keycaps: Vec<char> = Vec::new();
+        for word in remaining_words {
+            for c in word.chars() {
+                println!("checking for {}", c);
+                if let Some(&keycap_inventory) = inventory.keycaps.get(&c) {
+                    if keycap_inventory != 0 {
+                        found_keycaps.push(c);
+                    } else {
+                        println!("{} count is 0", c);
+                        return false;
+                    }
+                } else {
+                    println!("{} not found in inventory", c);
+                    return false;
+                }
+            }
+        }
+
+        // remove found words and keycaps from inventory
+        for word in found_words {
+            *inventory.words.get_mut(word).unwrap() -= 1;
+        }
+        println!("found keycaps: {:?}", found_keycaps);
+        for keycap in found_keycaps {
+            *inventory.keycaps.get_mut(&keycap).unwrap() -= 1;
+        }
+        true
     }
 
     // create cheat codes resource
@@ -164,7 +231,7 @@ impl CheatCodesResource {
         );
 
         for (_, code) in codes.iter() {
-            println!("{}", code.text);
+            println!("{:?}: {}", code.kind, code.text);
         }
 
         Self { codes }

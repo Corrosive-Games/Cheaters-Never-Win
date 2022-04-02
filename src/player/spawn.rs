@@ -1,6 +1,7 @@
 use crate::player::feet;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use std::collections::HashMap;
 
 // core component for player entity
 #[derive(Debug, Component)]
@@ -15,6 +16,13 @@ pub struct Player {
     pub dash_cooldown_timer: Timer,           // cooldown timer of dash ability
     pub dash_input_count: u8,                 // number of dash inputs performed
     pub is_dashing: bool,                     // whether the player is currently dashing
+    pub inventory: Inventory,
+}
+
+#[derive(Debug, Default)]
+pub struct Inventory {
+    pub keycaps: HashMap<char, u32>,
+    pub words: HashMap<String, u32>,
 }
 
 // TODO: remove
@@ -28,6 +36,31 @@ pub fn spawn_player(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     rapier_config: Res<RapierConfiguration>,
 ) {
+    // TODO: remove
+    let mut test_words = HashMap::new();
+    test_words.insert("till".to_string(), 1);
+    test_words.insert("rich".to_string(), 1);
+    test_words.insert("weak".to_string(), 1);
+    test_words.insert("mode".to_string(), 1);
+    test_words.insert("upon".to_string(), 1);
+    test_words.insert("core".to_string(), 1);
+    test_words.insert("dawn".to_string(), 1);
+    test_words.insert("tiny".to_string(), 1);
+    test_words.insert("zero".to_string(), 1);
+    test_words.insert("kick".to_string(), 1);
+    test_words.insert("back".to_string(), 1);
+    test_words.insert("show".to_string(), 1);
+
+    let mut test_keycaps = HashMap::new();
+    test_keycaps.insert('b', 3);
+    test_keycaps.insert('a', 3);
+    test_keycaps.insert('c', 3);
+    test_keycaps.insert('k', 3);
+    test_keycaps.insert('s', 3);
+    test_keycaps.insert('h', 3);
+    test_keycaps.insert('o', 3);
+    test_keycaps.insert('w', 3);
+
     let texture_handle = asset_server.load("player.png");
     // TODO: store texture atlas params in data file
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(71.0, 67.0), 8, 5);
@@ -44,6 +77,11 @@ pub fn spawn_player(
         dash_cooldown_timer: Timer::from_seconds(1.5, false),
         dash_input_count: 1,
         is_dashing: false,
+        //inventory: Inventory::default(),
+        inventory: Inventory {
+            keycaps: test_keycaps,
+            words: test_words,
+        },
     };
 
     let collider_size_hx = 30.0 / rapier_config.scale / 2.0;
