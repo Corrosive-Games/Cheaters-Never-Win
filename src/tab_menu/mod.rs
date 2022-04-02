@@ -7,7 +7,7 @@ mod first_page;
 mod second_page;
 
 use crate::{
-    cheat_codes::{CheatCodeKind, CheatCodeResource},
+    //cheat_codes::{CheatCodeKind, CheatCodeResource},
     game_states::GameStates,
     player::CollectedChars,
     stats::GameStatsResource,
@@ -66,7 +66,7 @@ fn switch_page(
     mut keyboard: ResMut<Input<KeyCode>>,
     query: Query<Entity, With<TabMenuContent>>,
     window: Res<Windows>,
-    cheat_codes_res: Res<CheatCodeResource>,
+    //cheat_codes_res: Res<CheatCodeResource>,
     collected_chars_res: Res<CollectedChars>,
     stats_res: Res<GameStatsResource>,
 ) {
@@ -78,13 +78,13 @@ fn switch_page(
                 commands,
                 assets,
                 query,
-                cheat_codes_res,
+                //cheat_codes_res,
                 collected_chars_res,
                 window,
             );
         } else {
             assets.current_page = "first".to_string();
-            first_page::build_ui(commands, assets, query, cheat_codes_res, stats_res, window);
+            first_page::build_ui(commands, assets, query, stats_res, window);
         }
 
         keyboard.reset(KeyCode::Tab);
@@ -131,7 +131,7 @@ pub struct TabMenuAssets {
     second_page: Handle<Image>,
     font: Handle<Font>,
     font_2: Handle<Font>,
-    icons: HashMap<CheatCodeKind, Handle<Image>>,
+    //icons: HashMap<CheatCodeKind, Handle<Image>>,
     current_page: String,
 }
 
@@ -139,7 +139,7 @@ fn load_assets(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut loading: ResMut<AssetsLoading>,
-    cheat_codes_res: Res<CheatCodeResource>,
+    //cheat_codes_res: Res<CheatCodeResource>,
 ) {
     let first_page = asset_server.load("open_book.png");
     loading.add(&first_page);
@@ -153,20 +153,22 @@ fn load_assets(
     let font_2 = asset_server.load("fonts/VT323-Regular.ttf");
     loading.add(&font_2);
 
-    let mut icons = HashMap::new();
+    //let mut icons = HashMap::new();
 
+    /*
     for (kind, code) in cheat_codes_res.codes.iter() {
         let icon = asset_server.load(&format!("cheat_codes/{}", code.image));
         loading.add(&icon);
         icons.insert(*kind, icon);
     }
+    */
 
     commands.insert_resource(TabMenuAssets {
         first_page,
         second_page,
         font,
         font_2,
-        icons,
+        //icons,
         current_page: "first".to_string(),
     })
 }

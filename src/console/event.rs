@@ -2,9 +2,11 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
-use crate::{cheat_codes::CheatCodeResource, toast::ShowToast};
+//use crate::cheat_codes::CheatCodeResource;
+use crate::toast::ShowToast;
 
-use super::{CheatCodeActivatedEvent, ConsoleData};
+use super::ConsoleData;
+//use super::CheatCodeActivatedEvent;
 
 pub struct PrintToConsoleEvent(pub String);
 pub struct SendCommandEvent(pub String);
@@ -18,6 +20,7 @@ pub fn add_message_events_to_console(
     }
 }
 
+/*
 pub fn show_help_text(
     mut ev_reader: EventReader<CheatCodeActivatedEvent>,
     mut ev_writer: EventWriter<ShowToast>,
@@ -31,3 +34,4 @@ pub fn show_help_text(
         })
     }
 }
+*/

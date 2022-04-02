@@ -1,9 +1,11 @@
 use crate::audio::{GameAudioOptions, GameAudioState};
-use crate::cheat_codes::CheatCodeActivationResult;
+//use crate::cheat_codes::CheatCodeActivationResult;
 use crate::player::CollectedChars;
-use crate::{cheat_codes::CheatCodeResource, game_states::GameStates};
+//use crate::{cheat_codes::CheatCodeResource, game_states::GameStates};
+use crate::game_states::GameStates;
 
-use super::{event::*, CheatCodeActivatedEvent, ConsoleData};
+//use super::CheatCodeActivatedEvent;
+use super::{event::*, ConsoleData};
 use bevy::prelude::*;
 
 pub fn command_handler(
@@ -11,9 +13,9 @@ pub fn command_handler(
     mut print_to_console: EventWriter<PrintToConsoleEvent>,
     mut data: ResMut<ConsoleData>,
     mut game_state: ResMut<State<GameStates>>,
-    mut cheat_codes_res: ResMut<CheatCodeResource>,
+    //mut cheat_codes_res: ResMut<CheatCodeResource>,
     mut collected_chars: ResMut<CollectedChars>,
-    mut ev_writer: EventWriter<CheatCodeActivatedEvent>,
+    //mut ev_writer: EventWriter<CheatCodeActivatedEvent>,
     mut game_audio_state: ResMut<GameAudioState>,
 ) {
     for SendCommandEvent(command) in cmd_reader.iter() {
@@ -42,8 +44,9 @@ pub fn command_handler(
                     args[1]
                 )));
 
-                let can_activate = is_valid_cheat(&mut collected_chars, args[1], &cheat_codes_res);
+                //let can_activate = is_valid_cheat(&mut collected_chars, args[1], &cheat_codes_res);
 
+                /*
                 if can_activate {
                     let activation_res = cheat_codes_res.activate_code(args[1]);
                     print_to_console.send(PrintToConsoleEvent(format!(
@@ -65,6 +68,7 @@ pub fn command_handler(
                         "Failed to activate. Need more information."
                     )));
                 }
+                */
             }
             "exit" => {
                 print_to_console.send(PrintToConsoleEvent("Closing session...".to_string()));
@@ -81,6 +85,7 @@ pub fn command_handler(
     }
 }
 
+/*
 pub fn is_valid_cheat(
     collected_chars: &mut CollectedChars,
     code_text: &str,
@@ -119,3 +124,4 @@ pub fn is_valid_cheat(
     collected_chars.values_map = original_collected_chars_map;
     false
 }
+*/

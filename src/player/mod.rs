@@ -89,7 +89,7 @@ impl Plugin for RunnerPlugin {
                 .with_system(interact::detect_char_interactable)
                 .with_system(movement::player_collision_system)
                 .with_system(movement::player_fall_damage)
-                .with_system(interact::detect_cheat_code_activation)
+                //.with_system(interact::detect_cheat_code_activation)
                 .with_system(interact::show_terminal_toaster_notification),
         );
     }

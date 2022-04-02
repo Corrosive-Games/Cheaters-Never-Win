@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use super::ConsoleAssets;
 
-use crate::cheat_codes::CheatCodeResource;
+//use crate::cheat_codes::CheatCodeResource;
 use crate::player::{CollectedChars, LETTERS};
 
 // Components
@@ -37,7 +37,7 @@ pub fn build_ui(
     mut commands: Commands,
     console_assets: Res<ConsoleAssets>,
     window: Res<Windows>,
-    cheat_codes_res: Res<CheatCodeResource>,
+    //cheat_codes_res: Res<CheatCodeResource>,
     collected_chars_res: Res<CollectedChars>,
     assets: Res<AssetServer>,
 ) {
@@ -149,6 +149,7 @@ pub fn build_ui(
         ..Default::default()
     };
     // Component for cheat codes
+    /*
     let sections = cheat_codes_res
         .codes
         .values()
@@ -163,6 +164,8 @@ pub fn build_ui(
             ..Default::default()
         })
         .collect::<Vec<TextSection>>();
+        */
+    /*
     let found_codes_component = TextBundle {
         text: Text {
             sections,
@@ -177,6 +180,7 @@ pub fn build_ui(
         },
         ..Default::default()
     };
+    */
 
     let collected_letters_content_container = NodeBundle {
         style: Style {
@@ -293,7 +297,7 @@ pub fn build_ui(
             parent
                 .spawn_bundle(cheat_codes_content_container)
                 .with_children(|parent| {
-                    parent.spawn_bundle(found_codes_component);
+                    //parent.spawn_bundle(found_codes_component);
                 });
             //displaying collected letters in right margin
             parent

@@ -1,6 +1,6 @@
 use crate::{
     audio::{GameAudioOptions, GameAudioState},
-    cheat_codes::{CheatCodeKind, CheatCodeResource},
+    //cheat_codes::{CheatCodeKind, CheatCodeResource},
     interactables::{CharTextComponent, InteractableComponent, InteractableType},
     player::{spawn, CollectedChars},
     toast::ShowToast,
@@ -10,6 +10,7 @@ use bevy_kira_audio::{Audio, AudioChannel};
 use std::time::Duration;
 
 // TODO: move/remove belongs in cheat_codes
+/*
 pub fn detect_cheat_code_activation(
     mut query: Query<&mut spawn::Player>,
     mut cheat_codes: ResMut<CheatCodeResource>,
@@ -21,6 +22,7 @@ pub fn detect_cheat_code_activation(
         }
     }
 }
+*/
 
 // TODO: generalize for all interactable entities
 pub fn show_terminal_toaster_notification(

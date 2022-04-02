@@ -37,7 +37,7 @@ fn main() {
         title: "Cheaters Never Win".to_string(),
         ..Default::default()
     })
-    .insert_resource(cheat_codes::CheatCodeResource::new())
+    .insert_resource(cheat_codes::CheatCodesResource::new())
     .add_plugin(main_menu::MainMenuPlugin)
     .add_plugins(DefaultPlugins)
     .add_plugin(tab_menu::TabMenuPlugin)

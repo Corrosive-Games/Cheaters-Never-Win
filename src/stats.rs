@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::RigidBodyVelocityComponent;
 
-use crate::{cheat_codes::CheatCodeResource, game_states::GameStates, player::Player};
+use crate::{game_states::GameStates, player::Player};
+//use crate cheat_codes::CheatCodeResource;
 
 pub struct GameStatsPlugin;
 
@@ -11,7 +12,7 @@ impl Plugin for GameStatsPlugin {
         app.insert_resource(GameStatsResource::new());
         app.add_system(enemy_killed_handler);
         app.add_system(update_max_distance);
-        app.add_system(update_cheats_activated);
+        //app.add_system(update_cheats_activated);
         app.add_system_set(SystemSet::on_update(GameStates::Main).with_system(update_run_time));
         app.add_system_set(SystemSet::on_update(GameStates::Main).with_system(update_avg_speed));
     }
@@ -74,6 +75,7 @@ pub fn update_max_distance(
     }
 }
 
+/*
 pub fn update_cheats_activated(
     cheat_codes_res: Res<CheatCodeResource>,
     mut stats_res: ResMut<GameStatsResource>,
@@ -89,6 +91,7 @@ pub fn update_cheats_activated(
         .filter(|(kind, _)| cheat_codes_res.is_code_activated(kind))
         .count()
 }
+*/
 
 pub fn update_run_time(time: Res<Time>, mut stats_res: ResMut<GameStatsResource>) {
     stats_res.run_time += time.delta_seconds_f64();

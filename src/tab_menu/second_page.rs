@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::cheat_codes::CheatCodeResource;
+//use crate::cheat_codes::CheatCodeResource;
 use crate::player::{CollectedChars, LETTERS};
 
 use super::{TabMenuAssets, TabMenuContent};
@@ -12,7 +12,7 @@ pub fn build_ui(
     mut commands: Commands,
     assets: ResMut<TabMenuAssets>,
     query: Query<Entity, With<TabMenuContent>>,
-    cheat_codes_res: Res<CheatCodeResource>,
+    //cheat_codes_res: Res<CheatCodeResource>,
     collected_chars_res: Res<CollectedChars>,
     window: Res<Windows>,
 ) {
@@ -82,7 +82,7 @@ pub fn build_ui(
         color: Color::rgba_u8(0, 0, 0, 0).into(),
         ..Default::default()
     };
-
+    /*
     let sections = cheat_codes_res
         .codes
         .values()
@@ -96,7 +96,8 @@ pub fn build_ui(
             ..Default::default()
         })
         .collect::<Vec<TextSection>>();
-
+        */
+    /*
     let found_codes = TextBundle {
         text: Text {
             sections,
@@ -104,6 +105,7 @@ pub fn build_ui(
         },
         ..Default::default()
     };
+    */
 
     // TODO: refactor creating page for collected letters
     let mut collected_chars_section: Vec<TextSection> = Vec::new();
@@ -183,7 +185,7 @@ pub fn build_ui(
             parent.spawn_bundle(background_component);
             parent.spawn_bundle(book).with_children(|parent| {
                 parent.spawn_bundle(left_page).with_children(|parent| {
-                    parent.spawn_bundle(found_codes);
+                    //parent.spawn_bundle(found_codes);
                 });
                 parent.spawn_bundle(right_page).with_children(|parent| {
                     parent.spawn_bundle(collected_letters_1);

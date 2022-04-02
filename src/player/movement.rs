@@ -6,8 +6,10 @@ use rand::Rng;
 
 use crate::{
     audio::{GameAudioOptions, GameAudioState},
-    cheat_codes::{self, CheatCodeKind},
-    effects, enemies, game_states,
+    //cheat_codes::{self, CheatCodeKind},
+    effects,
+    enemies,
+    game_states,
     game_states::GameStates,
     physics,
     player::spawn,
@@ -24,12 +26,13 @@ pub fn move_player_system(
     )>,
     mut animation_query: Query<&mut TextureAtlasSprite, With<spawn::PlayerAnimationTimer>>,
     player_animation_resource: Res<PlayerAnimationResource>,
-    cheat_codes: ResMut<cheat_codes::CheatCodeResource>,
+    //cheat_codes: ResMut<cheat_codes::CheatCodeResource>,
     mut game_audio_state: ResMut<GameAudioState>,
     time: Res<Time>,
 ) {
     for (mut player, mut rb_vel, rb_mprops) in query.iter_mut() {
         // update acceleration value
+        /*
         if cheat_codes.is_code_activated(&CheatCodeKind::SpeedBoost3) {
             player.acceleration = 0.15;
             player.deceleration = 0.4;
@@ -43,12 +46,16 @@ pub fn move_player_system(
             player.deceleration = 0.2;
             player.speed = 8.3;
         }
+        */
 
         let _up = keyboard_input.pressed(KeyCode::W);
         let _down = keyboard_input.pressed(KeyCode::S);
         let right = keyboard_input.pressed(KeyCode::D);
         let dash = keyboard_input.just_released(KeyCode::D);
+        // TODO: check if cheat code activated
+        let left = keyboard_input.pressed(KeyCode::A);
 
+        /*
         let jump = cheat_codes.is_code_activated(&CheatCodeKind::Jump)
             && keyboard_input.just_pressed(KeyCode::Space)
             && !player.feet_touching_platforms.is_empty()
@@ -58,7 +65,6 @@ pub fn move_player_system(
         let left = cheat_codes.is_code_activated(&CheatCodeKind::MoveLeft)
             && keyboard_input.pressed(KeyCode::A);
 
-        let x_axis = -(left as i8) + right as i8;
 
         if dash && cheat_codes.is_code_activated(&CheatCodeKind::Dash) {
             if player.dash_input_count == 0 {
@@ -70,6 +76,8 @@ pub fn move_player_system(
                 player.dash_cooldown_timer.reset()
             }
         }
+        */
+        let x_axis = -(left as i8) + right as i8;
 
         if player.dash_input_count == 1 {
             player.dash_input_timer.tick(time.delta());
@@ -101,6 +109,7 @@ pub fn move_player_system(
             rb_vel.linvel.x += player.acceleration * 2.0;
         }
 
+        /*
         if jump {
             if !player.feet_touching_platforms.is_empty() {
                 // single jump
@@ -126,6 +135,7 @@ pub fn move_player_system(
                 player.jump_count = 0;
             }
         }
+        */
     }
 }
 

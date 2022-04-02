@@ -1,9 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{
-    cheat_codes::{CheatCodeKind, CheatCodeResource},
-    stats::GameStatsResource,
-};
+use crate::stats::GameStatsResource;
 
 use super::{TabMenuAssets, TabMenuContent};
 
@@ -14,7 +11,7 @@ pub fn build_ui(
     mut commands: Commands,
     assets: ResMut<TabMenuAssets>,
     query: Query<Entity, With<TabMenuContent>>,
-    cheat_codes_res: Res<CheatCodeResource>,
+    //cheat_codes_res: Res<CheatCodeResource>,
     stats_res: Res<GameStatsResource>,
     window: Res<Windows>,
 ) {
@@ -89,13 +86,14 @@ pub fn build_ui(
         text: Text {
             sections: vec![TextSection {
                 value: format!(
-                    "Score: {}\n\nDistance: {:.2}m\n\nTime: {}\n\nAvg speed: {:.2}m/s\n\nCodes activated: {}/{}",
+                    //"Score: {}\n\nDistance: {:.2}m\n\nTime: {}\n\nAvg speed: {:.2}m/s\n\nCodes activated: {}/{}",
+                    "Score: {}\n\nDistance: {:.2}m\n\nTime: {}\n\nAvg speed: {:.2}m/s\n",
                     stats_res.get_score(),
                     stats_res.distance,
                     format_time(stats_res.run_time),
                     stats_res.avg_speed,
-                    stats_res.cheats_activated,
-                    cheat_codes_res.codes.len()
+                    //stats_res.cheats_activated,
+                    //cheat_codes_res.codes.len()
                 ),
                 style: TextStyle {
                     font: assets.font.clone(),
@@ -108,7 +106,7 @@ pub fn build_ui(
         },
         ..Default::default()
     };
-
+    /*
     let code_icon = |kind: &CheatCodeKind| ImageBundle {
         image: assets.icons.get(kind).unwrap().clone().into(),
         style: Style {
@@ -122,6 +120,7 @@ pub fn build_ui(
         },
         ..Default::default()
     };
+    */
 
     // ---------- UI TREE CONSTRUCTION ----------//
 
@@ -133,11 +132,13 @@ pub fn build_ui(
                     parent.spawn_bundle(run_stats);
                 });
                 parent.spawn_bundle(right_page).with_children(|parent| {
+                    /*
                     for kind in cheat_codes_res.codes.keys() {
                         if cheat_codes_res.is_code_activated(kind) {
                             parent.spawn_bundle(code_icon(kind).clone());
                         }
                     }
+                    */
                 });
             });
         })

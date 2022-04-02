@@ -7,7 +7,7 @@ use bevy_tweening::{
     TweeningType,
 };
 
-use crate::cheat_codes::CheatCodeResource;
+//use crate::cheat_codes::CheatCodeResource;
 use crate::player::CollectedChars;
 
 pub struct ShowToast {
@@ -31,7 +31,7 @@ impl Plugin for ToastPlugin {
         // always here so no need for a systemset
         app.add_startup_system(build_ui);
         app.add_system(update_content)
-            .add_system(test)
+            //.add_system(test)
             .add_system(display_queue);
         app.add_event::<ShowToast>();
         app.add_plugin(NinePatchPlugin::<()>::default());
@@ -189,6 +189,7 @@ fn display_queue(
     }
 }
 
+/*
 fn test(
     keyboard: Res<Input<KeyCode>>,
     mut toast_writer: EventWriter<ShowToast>,
@@ -215,3 +216,4 @@ fn test(
         }
     }
 }
+*/
