@@ -1,10 +1,7 @@
 use crate::player::Inventory;
 use rand::seq::IteratorRandom;
+use ron::de::from_bytes;
 use std::collections::HashMap;
-
-const WORD_LIST: [&'static str; 12] = [
-    "till", "rich", "weak", "mode", "upon", "core", "dawn", "tiny", "zero", "kick", "back", "show",
-];
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, Debug)]
 pub enum CheatCodeKind {
@@ -104,21 +101,19 @@ impl CheatCodesResource {
                         CheatCodeActivation::Multiple => {
                             // activate the code
                             code.is_active = true;
-                            return CheatCodeActivationResult::Activated(code.kind.clone());
+                            return CheatCodeActivationResult::Activated(code.kind);
                         }
                         CheatCodeActivation::Once => {
                             if code.is_active {
-                                return CheatCodeActivationResult::AlreadyActivated(
-                                    code.kind.clone(),
-                                );
+                                return CheatCodeActivationResult::AlreadyActivated(code.kind);
                             } else {
                                 code.is_active = true;
-                                return CheatCodeActivationResult::Activated(code.kind.clone());
+                                return CheatCodeActivationResult::Activated(code.kind);
                             }
                         }
                     }
                 } else {
-                    return CheatCodeActivationResult::InadequateInventory(code.kind.clone());
+                    return CheatCodeActivationResult::InadequateInventory(code.kind);
                 }
             }
         }
@@ -179,7 +174,8 @@ impl CheatCodesResource {
     // create cheat codes resource
     pub fn new() -> Self {
         let mut codes: HashMap<CheatCodeKind, CheatCode> = HashMap::new();
-        let mut word_list: Vec<&str> = WORD_LIST.to_vec();
+        let mut word_list =
+            from_bytes::<Vec<&str>>(include_bytes!("../../data/word_list.ron")).unwrap();
 
         insert_cheat(
             &mut word_list,
@@ -261,7 +257,7 @@ fn insert_cheat(
 }
 
 // generate code from three words from word list
-pub fn generate_random_code(mut word_list: &mut Vec<&str>) -> String {
+pub fn generate_random_code(word_list: &mut Vec<&str>) -> String {
     let mut random_code = "".to_string();
     for i in 0..3 {
         let wl = word_list.clone();
@@ -272,10 +268,11 @@ pub fn generate_random_code(mut word_list: &mut Vec<&str>) -> String {
             .unwrap();
 
         word_list.remove(j);
-        random_code += &word;
+        random_code += word;
 
         if word_list.is_empty() {
-            *word_list = WORD_LIST.to_vec();
+            *word_list =
+                from_bytes::<Vec<&str>>(include_bytes!("../../data/word_list.ron")).unwrap();
         }
 
         if i != 2 {

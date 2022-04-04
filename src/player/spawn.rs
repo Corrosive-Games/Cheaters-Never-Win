@@ -51,6 +51,7 @@ pub fn spawn_player(
     test_words.insert("back".to_string(), 1);
     test_words.insert("show".to_string(), 1);
 
+    // TODO: remove
     let mut test_keycaps = HashMap::new();
     test_keycaps.insert('b', 3);
     test_keycaps.insert('a', 3);
